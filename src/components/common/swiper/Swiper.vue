@@ -194,7 +194,7 @@ export default {
 </script>
 
 <style scoped>
-#hy-swiper {
+  #hy-swiper {
     overflow: hidden;
     position: relative;
   }
