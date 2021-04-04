@@ -108,6 +108,8 @@ export default {
 <style scoped>
   #home {
     padding-top: 44px;
+    height: 100vh;
+    position: relative;
   }
   .home-nav {
     background-color: var(--color-tint);
@@ -121,13 +123,24 @@ export default {
   }
 
   .tab-control {
-    position: sticky;
+    /* position: sticky; */
     top: 44px;
     z-index: 9;
   }
 
   .content {
-    height: 300px;
+    /* height: 300px; */
     overflow: hidden;
+
+    position: absolute;
+    top: 44px;
+    bottom: 49px;
+    left: 0;
+    right: 0;
   }
+  /* .content {
+    height: calc(100% - 93px);
+    overflow: hidden;
+    margin-top: 44px;
+  } */
 </style>

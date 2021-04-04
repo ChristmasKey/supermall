@@ -19,14 +19,14 @@
     },
     mounted() {
       this.scroll = new BScroll(this.$refs.wrapper, {
-        pullUpLoad: true
+        pullUpLoad: true,
+        observeDOM: true
       });
 
       this.scroll.on('pullingUp', () => {
         // console.log('到底了');
         this.scroll.finishPullUp();
       });
-
     }
   }
 </script>
