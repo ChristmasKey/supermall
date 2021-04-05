@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import vConsole from 'vconsole'
 
-var vconsole = new vConsole();
+// var vconsole = new vConsole();
 
 Vue.config.productionTip = false
 

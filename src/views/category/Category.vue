@@ -1,7 +1,8 @@
 <template>
   <div class="wrapper">
+    <button @click="btnClick">按钮</button>
+    <div @click="divClick">呵呵呵</div>
     <ul class="content">
-      <button @click="btnClick">按钮</button>
       <li>分类列表1</li>
       <li>分类列表2</li>
       <li>分类列表3</li>
@@ -120,8 +121,8 @@ export default {
     this.scroll = new BScroll('.wrapper', {
       probeType: 3,
       pullUpLoad: true,
-      // click 属性不需要设置了
-      // click: true
+      // click对按钮的点击事件不生效
+      click: true
     });
 
     this.scroll.on('scroll', position => {
@@ -136,6 +137,9 @@ export default {
   methods: {
     btnClick() {
       console.log('btnClick');
+    },
+    divClick() {
+      console.log('1351');
     }
   }
 }

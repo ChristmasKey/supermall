@@ -4,13 +4,16 @@
       <div slot="center">购物街</div>
     </nav-bar>
 
-    <scroll class="content">
+    <scroll class="content" ref="scroll" :click="true" :probeType="3" 
+    :pullUpLoad="true" @scroll="contentScroll" @pullingUp="loadMore">
       <home-swiper :banners="banners"/>
       <home-recommend-view :recommends="recommends"/>
       <feature-view />
       <tab-control class="tab-control" :titles="['流行', '新款', '精选']" @tabClick="tabClick"/>
       <goods-list :goods="showGoods"/>
     </scroll>
+
+    <back-top @click.native="backClick" v-show="isShowBackTop"/>
   </div>
 </template>
 
@@ -19,6 +22,7 @@ import NavBar from 'components/common/navbar/NavBar'
 import Scroll from 'components/common/scroll/Scroll'
 import TabControl from 'components/content/tabControl/TabControl'
 import GoodsList from 'components/content/goods/GoodsList'
+import BackTop from 'components/content/backTop/BackTop'
 
 import HomeSwiper from './childComps/HomeSwiper'
 import HomeRecommendView from './childComps/HomeRecommendView'
@@ -33,6 +37,7 @@ export default {
     Scroll,
     TabControl,
     GoodsList,
+    BackTop,
 
     HomeSwiper,
     HomeRecommendView,
@@ -47,7 +52,8 @@ export default {
         'new': {page: 0, list: []},
         'sell': {page: 0, list: []},
       },
-      currentType: 'pop'
+      currentType: 'pop',
+      isShowBackTop: false
     };
   },
   computed: {
@@ -82,6 +88,8 @@ export default {
         // this.goods[type].list.push(...res.data.list);
         this.goods[type].list.push(...res);
         this.goods[type].page += 1;
+
+        this.$refs.scroll.finishPullUp();
       });
     },
 
@@ -100,6 +108,21 @@ export default {
           this.currentType = 'sell';
           break;
       }
+    },
+
+    backClick() {
+      // 参数：x, y, time
+      this.$refs.scroll.scrollTo(0, 0, 500);
+    },
+
+    contentScroll(position) {
+      this.isShowBackTop = (-position.y) > 1000
+    },
+
+    loadMore() {
+      // console.log('上拉加载更多');
+      this.getHomeGoods(this.currentType);
+      
     }
   }
 }
