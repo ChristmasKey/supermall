@@ -1,6 +1,6 @@
 <template>
   <div class="goods-item">
-    <img :src="goodsItem.show.img" alt=""/>
+    <img :src="goodsItem.show.img" alt="" @load="imgLoad"/>
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -18,6 +18,14 @@ export default {
       default() {
         return {}
       }
+    }
+  },
+  methods: {
+    imgLoad() {
+      // 通过事件总线（类似Vuex）发射 图片加载成功 的监听事件
+      // console.log(this.$bus);
+      // this.$bus.$emit('itemImageLoad');
+      // console.log('图片加载完成');
     }
   }
 }

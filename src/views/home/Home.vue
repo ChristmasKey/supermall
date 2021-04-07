@@ -9,7 +9,7 @@
       <home-swiper :banners="banners"/>
       <home-recommend-view :recommends="recommends"/>
       <feature-view />
-      <tab-control class="tab-control" :titles="['流行', '新款', '精选']" @tabClick="tabClick"/>
+      <tab-control :titles="['流行', '新款', '精选']" @tabClick="tabClick"/>
       <goods-list :goods="showGoods"/>
     </scroll>
 
@@ -29,6 +29,7 @@ import HomeRecommendView from './childComps/HomeRecommendView'
 import FeatureView from './childComps/FeatureView'
 
 import {getHomeMultidata, getHomeGoods} from 'network/home'
+import {debounce} from 'common/utils';
 
 export default {
   name: 'home',
@@ -69,6 +70,17 @@ export default {
     this.getHomeGoods('pop', 1);
     this.getHomeGoods('new', 1);
     this.getHomeGoods('sell', 1);
+
+  },
+  mounted() {
+
+    // const refresh = debounce(this.$refs.scroll.refresh, 500);
+
+    // 监听item中图片加载完成
+    // 通过 总线 实现非父子组件之间的通信
+    // this.$bus.$on('itemImageLoad', () => {
+    //   refresh();
+    // });
   },
   methods: {
     /**
@@ -142,12 +154,6 @@ export default {
     left: 0;
     right: 0;
     top: 0;
-    z-index: 9;
-  }
-
-  .tab-control {
-    /* position: sticky; */
-    top: 44px;
     z-index: 9;
   }
 
