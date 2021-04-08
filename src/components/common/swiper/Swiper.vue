@@ -22,7 +22,7 @@ export default {
     },
     animDuration: {
       type: Number,
-      default: 300
+      default: 100
     },
     moveRatio: {
       type: Number,
@@ -40,6 +40,7 @@ export default {
       swiperStyle: {},  // swiper样式
       currentIndex: 1,  // 当前的index
       scrolling: false, // 是否正在滚动
+      isStarted: false, // 计时器是否开启
     }
   },
   mounted: function() {
@@ -54,13 +55,21 @@ export default {
   methods: {
     // 定时器操作
     startTimer: function() {
-      this.playTimer = window.setInterval(() => {
-        this.currentIndex++;
-        this.scrollContent(-this.currentIndex * this.totalWidth);
-      }, this.interval);
+      if(!this.isStarted) {
+        // console.log('开启定时器');
+        this.playTimer = window.setInterval(() => {
+          this.currentIndex++;
+          this.scrollContent(-this.currentIndex * this.totalWidth);
+        }, this.interval);
+        this.isStarted = true;
+      }
     },
     stopTimer: function() {
-      window.clearInterval(this.playTimer);
+      if(this.isStarted) {
+        // console.log('关闭定时器');
+        window.clearInterval(this.playTimer);
+        this.isStarted = false;
+      }
     },
 
     // 滚动到正确的位置

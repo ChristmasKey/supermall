@@ -8,7 +8,7 @@
 
     <scroll class="content" ref="scroll" :click="true" :probeType="3" 
     :pullUpLoad="true" @scroll="contentScroll" @pullingUp="loadMore">
-      <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad"/>
+      <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad" ref="homeswiper"/>
       <home-recommend-view :recommends="recommends"/>
       <feature-view />
       <tab-control :titles="['流行', '新款', '精选']" @tabClick="tabClick" ref="tabControl2"/>
@@ -59,6 +59,7 @@ export default {
       isShowBackTop: false,
       tabOffsetTop: 0,
       isTabFixed: false,
+      saveY: 0
     };
   },
   computed: {
@@ -82,6 +83,18 @@ export default {
     // this.$bus.$on('itemImageLoad', () => {
     //   refresh();
     // });
+  },
+  activated() {
+    this.$refs.scroll.scrollTo(0, this.saveY, 0);
+    this.$refs.scroll.refresh();
+    this.$refs.homeswiper.startHomeSwiperTimer();
+  },
+  deactivated() {
+    this.$refs.homeswiper.stopHomeSwiperTimer();
+    this.saveY = this.$refs.scroll.getScrollY();
+  },
+  destroyed() {
+    console.log('Home Destroyed');
   },
   methods: {
     /**
