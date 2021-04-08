@@ -3,13 +3,15 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
+    <tab-control :titles="['流行', '新款', '精选']" @tabClick="tabClick" ref="tabControl1"
+     class="tab-control" v-show="isTabFixed"/>
 
     <scroll class="content" ref="scroll" :click="true" :probeType="3" 
     :pullUpLoad="true" @scroll="contentScroll" @pullingUp="loadMore">
-      <home-swiper :banners="banners"/>
+      <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad"/>
       <home-recommend-view :recommends="recommends"/>
       <feature-view />
-      <tab-control :titles="['流行', '新款', '精选']" @tabClick="tabClick"/>
+      <tab-control :titles="['流行', '新款', '精选']" @tabClick="tabClick" ref="tabControl2"/>
       <goods-list :goods="showGoods"/>
     </scroll>
 
@@ -54,7 +56,9 @@ export default {
         'sell': {page: 0, list: []},
       },
       currentType: 'pop',
-      isShowBackTop: false
+      isShowBackTop: false,
+      tabOffsetTop: 0,
+      isTabFixed: false,
     };
   },
   computed: {
@@ -70,14 +74,11 @@ export default {
     this.getHomeGoods('pop', 1);
     this.getHomeGoods('new', 1);
     this.getHomeGoods('sell', 1);
-
   },
-  mounted() {
-
-    // const refresh = debounce(this.$refs.scroll.refresh, 500);
-
+  mounted() {    
     // 监听item中图片加载完成
     // 通过 总线 实现非父子组件之间的通信
+    // const refresh = debounce(this.$refs.scroll.refresh, 500);
     // this.$bus.$on('itemImageLoad', () => {
     //   refresh();
     // });
@@ -120,6 +121,8 @@ export default {
           this.currentType = 'sell';
           break;
       }
+      this.$refs.tabControl1.currentIndex = index;
+      this.$refs.tabControl2.currentIndex = index;
     },
 
     backClick() {
@@ -128,13 +131,28 @@ export default {
     },
 
     contentScroll(position) {
-      this.isShowBackTop = (-position.y) > 1000
+      // 1.判断BackTop是否显示
+      this.isShowBackTop = (-position.y) > 1000;
+
+      // 2.决定tabControl是否吸顶（position: fixed）
+      this.isTabFixed = (-position.y) > this.tabOffsetTop;
     },
 
     loadMore() {
       // console.log('上拉加载更多');
       this.getHomeGoods(this.currentType);
       
+    },
+
+    // tabControl的 吸顶 效果
+    swiperImageLoad() {
+      // 首先获取tabControl的offsetTop：必须知道滚动到多少时，开始有 吸顶 效果
+      // 在mounted中获取该值是不正确的（HomeSwiper中尚有图片未加载完）
+      // 监听HomeSwiper中的img加载完成，发出事件，在Home中获取正确的值
+      
+      // 获取tabControl的offsetTop
+      // 所有的组件都有一个属性 $el : 用于获取组件中的元素
+      this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
     }
   }
 }
@@ -150,6 +168,7 @@ export default {
     background-color: var(--color-tint);
     color: #fff;
 
+    /* 在使用浏览器原生滚动时，为了让导航不跟随一起滚动 */
     position: fixed;
     left: 0;
     right: 0;
@@ -172,4 +191,9 @@ export default {
     overflow: hidden;
     margin-top: 44px;
   } */
+
+  .tab-control {
+    position: relative;
+    z-index: 9;
+  }
 </style>
