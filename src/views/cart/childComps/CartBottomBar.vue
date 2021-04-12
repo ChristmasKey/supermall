@@ -1,7 +1,8 @@
 <template>
   <div class="bottom-bar">
     <div class="check-content">
-      <check-button class="check-button"/>
+      <check-button :is-check="isSelectAll" class="check-button"
+       @click.native="checkClick"/>
       <span>全选</span>
     </div>
 
@@ -36,6 +37,24 @@ export default {
     },
     checkLength() {
       return this.cartList.filter(item => item.checked).length;
+    },
+    isSelectAll() {
+      // return this.cartList.filter(item => !item.checked).length > 0;
+      if(this.cartList.length === 0) return false;
+      // find方法性能较高
+      return !this.cartList.find(item => !item.checked)
+    }
+  },
+  methods: {
+    checkClick() {
+      // 点击全选按钮：
+      // 如果原来都是选中的，点击一次，全部不选中
+      // 如果原来都是不选中（某些补选中），全部选中
+      if(this.isSelectAll) { // 全部选中
+        this.cartList.forEach(item => item.checked = false);
+      } else {
+        this.cartList.forEach(item => item.checked = true);
+      }
     }
   }
 }
